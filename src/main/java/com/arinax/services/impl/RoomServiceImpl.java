@@ -12,12 +12,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.arinax.entities.Game;
 import com.arinax.entities.Post;
 import com.arinax.entities.Room;
+import com.arinax.entities.Room.RoomStatus;
+import com.arinax.entities.RoomApprovalRequest;
 import com.arinax.entities.User;
 import com.arinax.exceptions.ResourceNotFoundException;
 import com.arinax.playloads.GameDto;
@@ -64,19 +67,43 @@ public class RoomServiceImpl implements RoomService{
 	    room.setGame(game);
 	    room.setEntryFee(roomDto.getEntryFee());
 	    
-	    String startTimeStr = roomDto.getStartTime(); // if it's String
-	    LocalDateTime startTime = LocalDateTime.parse(startTimeStr);
-	    room.setStartTime(startTime);
+	   // String startTimeStr = roomDto.getStartTime(); // if it's String
+	    //LocalDateTime startTime = LocalDateTime.parse(startTimeStr);
+	    //room.setStartTime(startTime);
 
 	   room.setGameType(roomDto.getGameType());
 	    room.setInventory(roomDto.getInventory());
 	    room.setUser(user);
 	    room.setContent(roomDto.getContent());
-	    
+	    room.setStatus(Room.RoomStatus.PENDING);
+	   
 	    return this.modelMapper.map(room, RoomDto.class);
 		
 	}
 
+	//room ko status pending nai rai ranxa , jaba samma creator le kunai user lai accept gardaina 
+	//so player ko req aako xa 20m vitra samma creator le kunai user lai accept garyana vane disappear
+	@Scheduled(fixedRate = 120000)
+	public void markExpiredRoomsAsDisappear() {
+	    LocalDateTime cutoff = LocalDateTime.now().minusMinutes(30); // filter recent rooms only
+	    List<Room> rooms = roomRepo.findRecentPendingRooms(Room.RoomStatus.PENDING, cutoff);
+
+	    LocalDateTime now = LocalDateTime.now();
+	    for (Room room : rooms) {
+	        if (room.getAddedDate().plusMinutes(20).isBefore(now)) {
+	            room.setStatus(Room.RoomStatus.DISAPPEAR);
+
+	            // Decrease balance from room creator
+	            User user = room.getUser();
+	            user.setBalance(user.getBalance() - 5);//
+	            userRepo.save(user);
+	            
+	            roomRepo.save(room);
+	        }
+	    }
+	}
+
+	
 	@Override
 	public RoomDto updateRoom(RoomDto roomDto, Integer roomId) {
 	    Room room = this.roomRepo.findById(roomId)
@@ -91,14 +118,14 @@ public class RoomServiceImpl implements RoomService{
 	    room.setInventory(roomDto.getInventory());
 
 	    // Handle start time conversion from String to LocalDateTime
-	    try {
-	        if (roomDto.getStartTime() != null) {
-	            LocalDateTime startTime = LocalDateTime.parse(roomDto.getStartTime());
-	            room.setStartTime(startTime);
-	        }
-	    } catch (DateTimeParseException e) {
-	        throw new RuntimeException("Invalid start time format: " + roomDto.getStartTime());
-	    }
+//	    try {
+//	        if (roomDto.getStartTime() != null) {
+//	            LocalDateTime startTime = LocalDateTime.parse(roomDto.getStartTime());
+//	            room.setStartTime(startTime);
+//	        }
+//	    } catch (DateTimeParseException e) {
+//	        throw new RuntimeException("Invalid start time format: " + roomDto.getStartTime());
+//	    }
 
 	    Room updatedRoom = this.roomRepo.save(room);
 	    return this.modelMapper.map(updatedRoom, RoomDto.class);
@@ -123,29 +150,28 @@ public class RoomServiceImpl implements RoomService{
 	
 	@Override
 	public RoomResponse getAllRooms(Integer pageNumber, Integer pageSize, String sortBy, String sortDir) {
-		 Sort sort = (sortDir.equalsIgnoreCase("asc")) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+	    Sort sort = (sortDir.equalsIgnoreCase("asc")) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+	    Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
 
-	        Pageable p = PageRequest.of(pageNumber, pageSize, sort);
+	    // केवल PENDING status भएका rooms को page लिउँ
+	    Page<Room> pageRoom = this.roomRepo.findByStatus(Room.RoomStatus.PENDING, pageable);
 
-	        Page<Room> pageRoom = this.roomRepo.findAll(p);
+	    List<Room> allRooms = pageRoom.getContent();
+	    List<RoomDto> roomDtos = allRooms.stream()
+	            .map(room -> this.modelMapper.map(room, RoomDto.class))
+	            .collect(Collectors.toList());
 
-	        List<Room> allRooms = pageRoom.getContent();
+	    RoomResponse roomResponse = new RoomResponse();
+	    roomResponse.setContent(roomDtos);
+	    roomResponse.setPageNumber(pageRoom.getNumber());
+	    roomResponse.setPageSize(pageRoom.getSize());
+	    roomResponse.setTotalElements(pageRoom.getTotalElements());
+	    roomResponse.setTotalPages(pageRoom.getTotalPages());
+	    roomResponse.setLastPage(pageRoom.isLast());
 
-	        List<RoomDto> roomDtos = allRooms.stream().map((room) -> this.modelMapper.map(room, RoomDto.class))
-	                .collect(Collectors.toList());
-
-	        RoomResponse roomResponse = new RoomResponse();
-
-	        roomResponse.setContent(roomDtos);
-	        roomResponse.setPageNumber(pageRoom.getNumber());
-	        roomResponse.setPageSize(pageRoom.getSize());
-	        roomResponse.setTotalElements(pageRoom.getTotalElements());
-
-	        roomResponse.setTotalPages(pageRoom.getTotalPages());
-	        roomResponse.setLastPage(pageRoom.isLast());
-
-	        return roomResponse;
+	    return roomResponse;
 	}
+
 
 	@Override
     public List<RoomDto> getRoomsByGame(Integer gameId) {
@@ -188,5 +214,7 @@ public class RoomServiceImpl implements RoomService{
 	        .map(room -> this.modelMapper.map(room, RoomDto.class))
 	        .collect(Collectors.toList());
 	}
+
+	
 
 }

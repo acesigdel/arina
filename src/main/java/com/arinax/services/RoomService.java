@@ -2,7 +2,7 @@ package com.arinax.services;
 
 import java.util.List;
 
-
+import com.arinax.entities.Room;
 import com.arinax.playloads.GameDto;
 import com.arinax.playloads.RoomDto;
 import com.arinax.playloads.RoomResponse;
@@ -38,6 +38,9 @@ public interface RoomService {
 			//List<RoomDto> searchRooms(Double keyword);
 
 			List<RoomDto> searchRooms(Double entryFee, String gameType);
+
+			
+			//List<RoomDto> getRoomsByStatus(Room.RoomStatus status);
 
 			
 

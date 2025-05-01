@@ -25,14 +25,14 @@ import com.arinax.services.RoomService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1/rooms")
 public class RoomController {
 
 	@Autowired
 	private RoomService roomService;
 
 //	create
-	@PostMapping("/user/{userId}/game/{gameId}/rooms")
+	@PostMapping("/user/{userId}/game/{gameId}")
 	public ResponseEntity<RoomDto> createRoom(@RequestBody RoomDto roomDto, @PathVariable Integer userId,
 			@PathVariable Integer gameId) {
 		RoomDto createRoom = this.roomService.createRoom(roomDto, userId, gameId);
@@ -97,7 +97,7 @@ public class RoomController {
 //        return new ResponseEntity<>(rooms, HttpStatus.OK);
 //    }
 //GET /api/v1/rooms/search?entryFee=100.0&gameType=2v2
-    @GetMapping("/rooms/search")
+    @GetMapping("/search")
     public ResponseEntity<List<RoomDto>> searchRoom(
             @RequestParam(required = false) Double entryFee,
             @RequestParam(required = false) String gameType) {

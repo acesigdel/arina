@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.arinax.entities.Game;
 import com.arinax.entities.User;
+import com.arinax.entities.Room.RoomStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
@@ -22,25 +23,25 @@ public class RoomDto {
 	
 	private Integer roomId;
 	
-
-	@Column(length = 1000000000)
 	private String content;
 
 	private LocalDateTime addedDate;
 
-	private String startTime;
+	//private String startTime;
 	
 	private double entryFee=0.0;
 	
 	private double wining;
 	private String gameType; // e.g. "1v1", "2v2", ..., "8v8"
 
-	
+	private RoomStatus status;
+	 public enum RoomStatus {
+	        PENDING,PLAYER_APPROVED, DISAPPEAR, PRIVATE
+	    }
 	private int inventory=0;
 
-	private Game game;
+	private GameDto game;
 	 
-	@ManyToOne
-	private User user;
+	private UserDto user;
 	
 }
