@@ -10,11 +10,13 @@ import org.springframework.stereotype.Service;
 
 import com.arinax.entities.RedeemRequest;
 import com.arinax.entities.User;
+import com.arinax.entities.UserTransaction;
 import com.arinax.exceptions.ApiException;
 import com.arinax.exceptions.ResourceNotFoundException;
 import com.arinax.playloads.RedeemRequestDto;
 import com.arinax.repositories.RedeemRequestRepo;
 import com.arinax.repositories.UserRepo;
+import com.arinax.repositories.UserTransactionRepo;
 import com.arinax.services.RedeemRequestService;
 @Service
 public class RedeemRequestServiceImpl implements RedeemRequestService{
@@ -25,6 +27,9 @@ public class RedeemRequestServiceImpl implements RedeemRequestService{
 	RedeemRequestRepo redeemRepo;
 	@Autowired
 	ModelMapper modelMapper;
+	
+	@Autowired
+	UserTransactionRepo userTransactionRepo;
 	
 	@Override
 	public RedeemRequestDto RedeemBalance(RedeemRequestDto redeemRequestDto, Integer userId, Double balance) {
@@ -72,6 +77,15 @@ public class RedeemRequestServiceImpl implements RedeemRequestService{
 	    user.setBalance(user.getBalance() - request.getAmount());
 	    userRepo.save(user);
 
+	    UserTransaction txn = new UserTransaction();
+        txn.setUser(user);
+        txn.setAmount(-request.getAmount()); // decrease  means credited
+        txn.setType("CREDITED");
+        txn.setReason("You have Redeem The Coin");
+        txn.setDateTime(LocalDateTime.now());
+        userTransactionRepo.save(txn); // Save transaction
+        
+	    
 	    request.setStatus(RedeemRequest.Status.APPROVED);
 	    request.setProcessedAt(LocalDateTime.now());
 

@@ -2,6 +2,7 @@ package com.arinax.services.impl;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,19 +15,24 @@ import org.springframework.stereotype.Service;
 import com.arinax.config.AppConstants;
 import com.arinax.entities.Role;
 import com.arinax.entities.User;
+import com.arinax.entities.UserTransaction;
 import com.arinax.exceptions.ApiException;
 import com.arinax.exceptions.ResourceNotFoundException;
 import com.arinax.playloads.UserDto;
 import com.arinax.playloads.VerificationDto;
 import com.arinax.repositories.RoleRepo;
 import com.arinax.repositories.UserRepo;
+import com.arinax.repositories.UserTransactionRepo;
 import com.arinax.services.NotificationService;
 import com.arinax.services.UserService;
+
 
 
 @Service
 public class UserServiceImpl implements UserService {
 
+	@Autowired
+	UserTransactionRepo userTransactionRepo;
 	@Autowired
 	private UserRepo userRepo;
 
@@ -151,6 +157,15 @@ public class UserServiceImpl implements UserService {
 	    if (incomingBalance == 0) return userToDto(user);
 
 	    user.setBalance(user.getBalance() + incomingBalance);
+	    
+	    UserTransaction txn = new UserTransaction();
+        txn.setUser(user);
+        txn.setAmount(+incomingBalance); // Positive means credited
+        txn.setType("CREDITED");
+        txn.setReason("coin is added in Your account");
+        txn.setDateTime(LocalDateTime.now());
+        userTransactionRepo.save(txn); // Save transaction
+        
 	    return userToDto(userRepo.save(user));
 	}
 

@@ -22,6 +22,8 @@ import com.arinax.entities.Room;
 import com.arinax.entities.Room.RoomStatus;
 import com.arinax.entities.RoomApprovalRequest;
 import com.arinax.entities.User;
+import com.arinax.entities.UserTransaction;
+import com.arinax.exceptions.ApiException;
 import com.arinax.exceptions.ResourceNotFoundException;
 import com.arinax.playloads.GameDto;
 import com.arinax.playloads.PostDto;
@@ -31,9 +33,10 @@ import com.arinax.playloads.RoomResponse;
 import com.arinax.repositories.GameModeRepo;
 import com.arinax.repositories.GameRepo;
 import com.arinax.repositories.PostRepo;
+import com.arinax.repositories.RoomApprovalRequestRepo;
 import com.arinax.repositories.RoomRepo;
 import com.arinax.repositories.UserRepo;
-
+import com.arinax.repositories.UserTransactionRepo;
 import com.arinax.services.RoomService;
 
 
@@ -52,7 +55,10 @@ public class RoomServiceImpl implements RoomService{
 	    @Autowired
 	    private GameRepo gameRepo;
 	   
-
+	    @Autowired
+	    UserTransactionRepo  userTransactionRepo;
+	    @Autowired
+	    RoomApprovalRequestRepo roomApprovalRequestRepo;
 	@Override
 	public RoomDto createRoom(RoomDto roomDto,Integer userId, Integer gameId) {
 
@@ -65,18 +71,30 @@ public class RoomServiceImpl implements RoomService{
 	    Room room = this.modelMapper.map(roomDto, Room.class);
 	    room.setAddedDate(LocalDateTime.now());
 	    room.setGame(game);
-	    room.setEntryFee(roomDto.getEntryFee());
 	    
-	   // String startTimeStr = roomDto.getStartTime(); // if it's String
-	    //LocalDateTime startTime = LocalDateTime.parse(startTimeStr);
-	    //room.setStartTime(startTime);
+	    double blc=user.getBalance();
+	    if(blc<roomDto.getEntryFee()) {
+	    	throw new ApiException("Insufficient Balance");
+	    }
+	    room.setEntryFee(roomDto.getEntryFee());
+	  //reducing balance  
+	  user.setBalance(user.getBalance()-roomDto.getEntryFee());
 
 	   room.setGameType(roomDto.getGameType());
 	    room.setInventory(roomDto.getInventory());
 	    room.setUser(user);
 	    room.setContent(roomDto.getContent());
 	    room.setStatus(Room.RoomStatus.PENDING);
-	   
+	    //----------------------------------------------------------------
+	    UserTransaction txn = new UserTransaction();
+        txn.setUser(user);
+        txn.setAmount(-roomDto.getEntryFee()); // negative means debit
+        txn.setType("DEBITED");
+        txn.setReason("coin is added in Your account");
+        txn.setDateTime(LocalDateTime.now());
+        //-----------------------------------------------------
+        userTransactionRepo.save(txn); // Save transaction
+	    userRepo.save(user);
 	    return this.modelMapper.map(room, RoomDto.class);
 		
 	}
@@ -87,15 +105,42 @@ public class RoomServiceImpl implements RoomService{
 	public void markExpiredRoomsAsDisappear() {
 	    LocalDateTime cutoff = LocalDateTime.now().minusMinutes(30); // filter recent rooms only
 	    List<Room> rooms = roomRepo.findRecentPendingRooms(Room.RoomStatus.PENDING, cutoff);
-
 	    LocalDateTime now = LocalDateTime.now();
+	   
 	    for (Room room : rooms) {
 	        if (room.getAddedDate().plusMinutes(20).isBefore(now)) {
-	            room.setStatus(Room.RoomStatus.DISAPPEAR);
+	        	double deduction=0.0;
+	        	double entryFee = room.getEntryFee();
+	        	User user = room.getUser();
+	            user.setBalance(user.getBalance() + entryFee); 
+	       
+	         // CREDIT transaction
+	            UserTransaction creditTxn = new UserTransaction();
+	            creditTxn.setUser(user);
+	            creditTxn.setAmount(entryFee);
+	            creditTxn.setType("CREDITED");
+	            creditTxn.setReason("Room entry fee returned due to no approval");
+	            creditTxn.setDateTime(LocalDateTime.now());
+	            userTransactionRepo.save(creditTxn);
+	            
+	        	List<RoomApprovalRequest> requests = roomApprovalRequestRepo.findByRoom(room);
+	        	 if (!requests.isEmpty()) {
+	        		    roomApprovalRequestRepo.deleteAll(requests);
+	        		
+	        		     deduction = entryFee * 0.13;
+	        		     user.setBalance(user.getBalance() - deduction); 
+	        	
+	        		  // DEBIT transaction
+	        		     UserTransaction debitTxn = new UserTransaction();
+	        		     debitTxn.setUser(user);
+	        		     debitTxn.setAmount(-deduction);
+	        		     debitTxn.setType("DEBITED");
+	        		     debitTxn.setReason("13% penalty for no approval");
+	        		     debitTxn.setDateTime(LocalDateTime.now());
+	        		     userTransactionRepo.save(debitTxn);
+	        	 }
 
-	            // Decrease balance from room creator
-	            User user = room.getUser();
-	            user.setBalance(user.getBalance() - 5);//
+	        	room.setStatus(Room.RoomStatus.DISAPPEAR);
 	            userRepo.save(user);
 	            
 	            roomRepo.save(room);
@@ -103,7 +148,9 @@ public class RoomServiceImpl implements RoomService{
 	    }
 	}
 
-	
+	[room request approved ] garna baki
+			
+			
 	@Override
 	public RoomDto updateRoom(RoomDto roomDto, Integer roomId) {
 	    Room room = this.roomRepo.findById(roomId)

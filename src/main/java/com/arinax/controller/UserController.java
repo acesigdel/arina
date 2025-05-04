@@ -17,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.arinax.entities.UserTransaction;
 import com.arinax.playloads.ApiResponse;
 import com.arinax.playloads.UserDto;
+import com.arinax.repositories.UserTransactionRepo;
 import com.arinax.services.UserService;
+
 
 import jakarta.validation.Valid;
 
@@ -31,6 +34,16 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	UserTransactionRepo userTransactionRepo;
+	
+	@GetMapping("/{userId}/statement")
+	public List<UserTransaction> getStatement(@PathVariable Integer userId) {
+	    return userTransactionRepo.findByRiderIdOrderByDateTimeDesc(userId);
+	}
+
+	
+	
 	// POST-create user
 	@PostMapping("/")
 	public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
