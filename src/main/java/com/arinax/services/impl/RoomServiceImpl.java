@@ -148,7 +148,7 @@ public class RoomServiceImpl implements RoomService{
 	    }
 	}
 
-	[room request approved ] garna baki
+	//[room request approved ] garna baki
 			
 			
 	@Override
