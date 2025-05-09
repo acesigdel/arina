@@ -50,7 +50,7 @@ public class RoomApprovalRequestServiceImpl implements RoomApprovalRequestServic
 	    User user = userRepo.findById(userId)
 	            .orElseThrow(() -> new ResourceNotFoundException("User", "User ID", userId));
 
-	    if (user.getBalance() < 21.0) {
+	    if (user.getBalance() < room.getEntryFee()) {
 	        throw new ApiException("Insufficient Balance");
 	    }
 

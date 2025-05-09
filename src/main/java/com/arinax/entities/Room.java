@@ -48,6 +48,7 @@ public class Room {
     private double entryFee = 0.0;
 
     private double wining;
+    
     private String gameType; // e.g. "1v1", "2v2", ..., "8v8"
 
     @Enumerated(EnumType.STRING)
