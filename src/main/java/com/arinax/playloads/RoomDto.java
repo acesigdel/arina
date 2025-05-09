@@ -39,7 +39,8 @@ public class RoomDto {
 	        PENDING,PLAYER_APPROVED, DISAPPEAR, PRIVATE
 	    }
 	private int inventory=0;
-
+	private String creator_SS;
+	private String player_SS;
 	private GameDto game;
 	 
 	private UserDto user;

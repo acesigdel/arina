@@ -82,6 +82,8 @@ public class RoomServiceImpl implements RoomService{
 
 	   room.setGameType(roomDto.getGameType());
 	    room.setInventory(roomDto.getInventory());
+	    room.setCreator_SS("");
+	    room.setPlayer_SS("");
 	    room.setUser(user);
 	    room.setContent(roomDto.getContent());
 	    room.setStatus(Room.RoomStatus.PENDING);
@@ -161,18 +163,15 @@ public class RoomServiceImpl implements RoomService{
 	    room.setEntryFee(roomDto.getEntryFee());
 	    room.setWining(roomDto.getWining());
 	    room.setGameType(roomDto.getGameType());
-	    
-	    room.setInventory(roomDto.getInventory());
+	    if (roomDto.getCreator_SS() != null) {
+	        room.setCreator_SS(roomDto.getCreator_SS());
+	    }
 
-	    // Handle start time conversion from String to LocalDateTime
-//	    try {
-//	        if (roomDto.getStartTime() != null) {
-//	            LocalDateTime startTime = LocalDateTime.parse(roomDto.getStartTime());
-//	            room.setStartTime(startTime);
-//	        }
-//	    } catch (DateTimeParseException e) {
-//	        throw new RuntimeException("Invalid start time format: " + roomDto.getStartTime());
-//	    }
+	    if (roomDto.getPlayer_SS() != null) {
+	        room.setPlayer_SS(roomDto.getPlayer_SS()); // Fixed line
+	    }
+
+	    room.setInventory(roomDto.getInventory());
 
 	    Room updatedRoom = this.roomRepo.save(room);
 	    return this.modelMapper.map(updatedRoom, RoomDto.class);

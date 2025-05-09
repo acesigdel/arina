@@ -27,7 +27,7 @@ public class RoomApprovalRequest {
 	    public enum ApprovedStatus {
 	        PENDING,CREATOR_APPROVED, REJECTED
 	    }
-	    
+	   
 	    @ManyToOne
 	    @JoinColumn(name = "user_id")
 	    private User user;

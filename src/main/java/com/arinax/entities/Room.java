@@ -67,4 +67,7 @@ public class Room {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+    
+    private String creator_SS;
+    private String player_SS;
 }
