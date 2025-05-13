@@ -90,8 +90,8 @@ public class UserServiceImpl implements UserService {
 		user.setRoles(new HashSet<>());          // initialize
 		user.getRoles().add(role);               // one role add (NORMAL_USER)
 		String generatedUsername = generateUniqueUsername(user.getEmail(), userDto.getMobileNo());
-		user.setU_Remark(generatedUsername);
-
+		
+        user.setURemark(generatedUsername);
 		user.setMobileNo(userDto.getMobileNo());
 		User newUser = this.userRepo.save(user);
 		String welcomeMessage = String.format("Welcome, %s! We're excited to have you on our ArinaX. enjoy the journey ahead! "

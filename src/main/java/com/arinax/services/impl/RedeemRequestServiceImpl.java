@@ -80,7 +80,7 @@ public class RedeemRequestServiceImpl implements RedeemRequestService{
 	    UserTransaction txn = new UserTransaction();
         txn.setUser(user);
         txn.setAmount(-request.getAmount()); // decrease  means credited
-        txn.setType("CREDITED");
+        txn.setType("DEBITED");
         txn.setReason("You have Redeem The Coin");
         txn.setDateTime(LocalDateTime.now());
         userTransactionRepo.save(txn); // Save transaction

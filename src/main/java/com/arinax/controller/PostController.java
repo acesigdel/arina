@@ -172,13 +172,13 @@ public class PostController {
         StreamUtils.copy(resource,response.getOutputStream())   ;
 
     }
-    @PutMapping("/{postId}/reject")
+    @PutMapping("/post/{postId}/reject")
     public ResponseEntity<PostDto> rejectPost(@PathVariable Integer postId) {
         PostDto rejectedRequest = postService.rejectPost(postId);
         		
         return ResponseEntity.ok(rejectedRequest);
     }
-    @PutMapping("/{postId}/approved")
+    @PutMapping("post/{postId}/approved")
     public ResponseEntity<PostDto> approvedPost(@PathVariable Integer postId) {
         PostDto approvedRequest = postService.approvePost(postId); 		
         return ResponseEntity.ok(approvedRequest);

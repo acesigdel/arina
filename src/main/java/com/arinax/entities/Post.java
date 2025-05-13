@@ -55,7 +55,7 @@ public class Post {
 	    private PostStatus status;
 	    
 	    public enum PostStatus {
-	        PENDING, Gamestarted, REJECTED
+	        PRIVATE, REJECTED,APPROVED, PENDING
 	    }
 	
 	@ManyToOne

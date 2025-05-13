@@ -33,7 +33,7 @@ public class UserDto {
 	private String mobileNo;
 	private double balance;
 	private String otp;
-	private String u_Remark;
+	private String uRemark;
 
 	
 	@NotEmpty

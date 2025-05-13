@@ -10,5 +10,5 @@ public interface TurnmentApprovalService {
 
 	List<TurnmentApprovalDto> getAllApprovalsByPostId(Integer postId);
 
-	TurnmentApprovalDto approvePostRequest(Integer postId, Integer userId);
+	TurnmentApprovalDto approvePostRequest(Integer postAppId);
 }

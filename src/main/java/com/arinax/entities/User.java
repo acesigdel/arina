@@ -49,7 +49,8 @@ public class User implements UserDetails {
 
 	private String password;
 	private String mobileNo;
-	private String u_Remark;
+	@Column(name = "u_Remark")   // keeps the same DB column
+	private String uRemark;
 	
 	private String puId;
 	private String fuId;

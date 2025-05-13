@@ -58,6 +58,13 @@ public class UserController {
 		UserDto updatedUser = this.userService.updateUser(userDto, uid);
 		return ResponseEntity.ok(updatedUser);
 	}
+	
+	@PutMapping("{userId}/addbalance")
+	public ResponseEntity<UserDto> BalanceUpdate( @RequestBody UserDto userDto,
+			@PathVariable("userId") Integer uid) {
+		UserDto updatedUser = this.userService.BalanceUpdate(userDto, uid);
+		return ResponseEntity.ok(updatedUser);
+	}
 
 	//ADMIN
 	// DELETE -delete user
