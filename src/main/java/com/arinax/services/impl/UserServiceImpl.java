@@ -59,6 +59,9 @@ public class UserServiceImpl implements UserService {
 
 		User user = this.modelMapper.map(userDto, User.class);
 
+		if(userDto.getMobileNo()==null) {
+			throw new ApiException("Mobile Number Also Required To SignIn");
+		}
 		// OTP Verify
 	    VerificationDto verification = verificationService.getOtpDetails(userDto.getEmail());
 
@@ -92,6 +95,7 @@ public class UserServiceImpl implements UserService {
 		String generatedUsername = generateUniqueUsername(user.getEmail(), userDto.getMobileNo());
 		
         user.setURemark(generatedUsername);
+        
 		user.setMobileNo(userDto.getMobileNo());
 		User newUser = this.userRepo.save(user);
 		String welcomeMessage = String.format("Welcome, %s! We're excited to have you on our ArinaX. enjoy the journey ahead! "
