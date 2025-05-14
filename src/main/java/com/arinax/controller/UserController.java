@@ -39,7 +39,7 @@ public class UserController {
 	
 	@GetMapping("/{userId}/statement")
 	public List<UserTransaction> getStatement(@PathVariable Integer userId) {
-	    return userTransactionRepo.findByRiderIdOrderByDateTimeDesc(userId);
+	    return userTransactionRepo.findByUserIdOrderByDateTimeDesc(userId);
 	}
 
 	

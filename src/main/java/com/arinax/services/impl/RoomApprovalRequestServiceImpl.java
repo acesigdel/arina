@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.arinax.entities.Room;
 import com.arinax.entities.RoomApprovalRequest;
@@ -22,7 +23,7 @@ import com.arinax.repositories.UserTransactionRepo;
 import com.arinax.services.RoomApprovalRequestService;
 
 
-
+@Service
 public class RoomApprovalRequestServiceImpl implements RoomApprovalRequestService{
 
 	@Autowired

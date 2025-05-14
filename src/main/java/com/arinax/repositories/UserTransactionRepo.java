@@ -9,5 +9,5 @@ import com.arinax.entities.UserTransaction;
 
 public interface UserTransactionRepo extends JpaRepository<UserTransaction, Integer>{
 
-	List<UserTransaction> findByRiderIdOrderByDateTimeDesc(Integer userId);
+	List<UserTransaction> findByUserIdOrderByDateTimeDesc(Integer userId);
 }

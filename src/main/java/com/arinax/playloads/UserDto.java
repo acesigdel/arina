@@ -19,7 +19,9 @@ import lombok.Setter;
 public class UserDto {
 
 	private int id;
-
+	private String uRemark;
+	
+	
 	@NotEmpty
 	@Size(min = 4, message = "Username must be min of 4 characters !!")
 	private String name;
@@ -33,7 +35,7 @@ public class UserDto {
 	private String mobileNo;
 	private double balance;
 	private String otp;
-	private String uRemark;
+	
 
 	
 	@NotEmpty

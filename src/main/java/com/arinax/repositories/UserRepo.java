@@ -14,12 +14,14 @@ import com.arinax.entities.User;
 
 public interface UserRepo extends JpaRepository<User, Integer>{
 		
+	boolean existsByuRemark(String uRemark);
+	
 	//Optional<User> findByMobileNo(String mobileNo);	
 	Optional<User> findByEmail(String email);
 	
 	@Query("SELECT u FROM User u JOIN u.roles r WHERE r.name = :roleName")
 	List<User> findAllByRoleName(@Param("roleName") String roleName);
 	
-	boolean existsByURemark(String uRemark);
+	
 
 }

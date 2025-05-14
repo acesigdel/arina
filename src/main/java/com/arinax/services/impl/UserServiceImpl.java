@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
 	    String finalUsername = baseUsername;
 	    int counter = 1;
 
-	    while (userRepo.existsByURemark(finalUsername)) {
+	    while (userRepo.existsByuRemark(finalUsername)) {
 	        finalUsername = baseUsername + counter;
 	        counter++;
 	    }

@@ -41,6 +41,9 @@ public class User implements UserDetails {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
+	@Column(name = "u_Remark")   // keeps the same DB column
+	private String uRemark;
+	
 	@Column(name = "user_name", nullable = false, length = 100)
 	private String name;
 
@@ -49,8 +52,7 @@ public class User implements UserDetails {
 
 	private String password;
 	private String mobileNo;
-	@Column(name = "u_Remark")   // keeps the same DB column
-	private String uRemark;
+
 	
 	private String puId;
 	private String fuId;
