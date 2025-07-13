@@ -51,6 +51,14 @@ public class UserController {
 		return new ResponseEntity<>(createUserDto, HttpStatus.CREATED);
 	}
 
+	
+	 @PutMapping("/{userId}/deviceToken")
+	 public ResponseEntity<UserDto>updateDeviceToken(
+			 @RequestBody UserDto userDto,
+			 @PathVariable Integer userId){
+		 UserDto updateUser=userService.updateDeviceToken(userDto, userId);
+		 return ResponseEntity.ok(updateUser);
+	 }
 	// PUT- update user
 
 	@PutMapping("/{userId}")

@@ -60,6 +60,17 @@
     <artifactId>mysql-connector-j</artifactId>
    
 </dependency>
+<dependency>
+    <groupId>com.google.firebase</groupId>
+    <artifactId>firebase-admin</artifactId>
+    <version>9.2.0</version> <!-- Use latest stable -->
+</dependency>
+
+<dependency>
+  <groupId>com.google.api-client</groupId>
+  <artifactId>google-api-client</artifactId>
+  <version>1.31.5</version>
+</dependency>
 
 <dependency>
     <groupId>commons-io</groupId>

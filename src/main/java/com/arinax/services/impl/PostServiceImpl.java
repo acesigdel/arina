@@ -2,6 +2,7 @@ package com.arinax.services.impl;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +23,7 @@ import com.arinax.entities.Role;
 import com.arinax.entities.User;
 import com.arinax.exceptions.ApiException;
 import com.arinax.exceptions.ResourceNotFoundException;
+import com.arinax.playloads.NotificationDto;
 import com.arinax.playloads.PostDto;
 import com.arinax.playloads.PostResponse;
 import com.arinax.repositories.GameModeRepo;
@@ -31,6 +33,7 @@ import com.arinax.repositories.RoleRepo;
 import com.arinax.repositories.UserRepo;
 import com.arinax.services.NotificationService;
 import com.arinax.services.PostService;
+
 
 
 
@@ -82,6 +85,7 @@ public class PostServiceImpl implements PostService {
         post.setUser(user);
         post.setGame(game);
         post.setGameMode(mode);
+        post.setStartTime(postDto.getStartTime());
         
         
         if (user.getRoles().stream().anyMatch(role -> role.getName().equals(adminRole.getName()))) {
@@ -95,16 +99,26 @@ public class PostServiceImpl implements PostService {
 
         if (user.getRoles().stream().anyMatch(role -> role.getName().equals(adminRole.getName()))) {
             // Admin created post => approved directly
-            notificationService.createNotification(user.getId(), "Your post has been created successfully.");
-            // Optional: if you want to show to admin as self confirmation
-            // notificationService.createNotification(user.getId(), "You created a post.");
+        	 NotificationDto notificationDto = new NotificationDto();
+             notificationDto.setMessage("Your Turnment has been created successfully.");
+                
+                notificationService.createNotification(notificationDto, user.getId(),null);
+        	
         } else {
             // Normal user created post => pending
-            notificationService.createNotification(user.getId(), "Your post has been submitted and is under review.");
+        	 NotificationDto notificationDto = new NotificationDto();
+        	 notificationDto.setMessage("Your Turnment has been submitted and is under review.");
+            notificationService.createNotification(notificationDto, user.getId(),null);
+            //----------------------------------------------------------------------------
             
             for (User admin : allAdmins) {
-                notificationService.createNotification(admin.getId(), "A new post needs approval.");
+                notificationService.sendNotificationToUsers(
+                    Collections.singletonList(admin.getId()),
+                    "A new Turnment needs approval.",
+                    null
+                );
             }
+
         }
         return this.modelMapper.map(newPost, PostDto.class);
     }
@@ -150,15 +164,27 @@ public class PostServiceImpl implements PostService {
         if (isAdmin) {
             post.setStatus(Post.PostStatus.APPROVED);
             // Admin updated the post => confirm notification
-            notificationService.createNotification(user.getId(), "Your post has been updated and approved successfully.");
+            NotificationDto notificationDto = new NotificationDto();
+       	 notificationDto.setMessage("Your post has been updated and approved successfully.");
+           notificationService.createNotification(notificationDto, user.getId(),null);
+           
         } else {
             post.setStatus(Post.PostStatus.PENDING);
-            // Notify normal user
-            notificationService.createNotification(user.getId(), "Your post has been updated and is under review.");
-            
+            NotificationDto notificationDto = new NotificationDto();
+          	 notificationDto.setMessage("Your post has been updated and is under review.");
+              notificationService.createNotification(notificationDto, user.getId(),null);
+           
+              
+             
             // Notify all admins
-            for (User admin : allAdmins) {
-                notificationService.createNotification(admin.getId(), "A post has been updated by a user and needs review.");
+            
+            	 for (User admin : allAdmins) {
+                     notificationService.sendNotificationToUsers(
+                         Collections.singletonList(admin.getId()),
+                         "A post has been updated by a user and needs review.",
+                         null
+                     );
+                 
             }
         }
         Post updatedPost = this.postRepo.save(post);
@@ -178,9 +204,9 @@ public class PostServiceImpl implements PostService {
         }
 
         post.setStatus(Post.PostStatus.APPROVED);
-       
-        notificationService.createNotification(post.getUser().getId(),
-                "Your post titled '" + post.getTitle() + "' has been APPROVED.");
+        NotificationDto notificationDto = new NotificationDto();
+     	 notificationDto.setMessage( "Your post titled '" + post.getTitle() + "' has been APPROVED.");
+         notificationService.createNotification(notificationDto, post.getUser().getId(),null);
 
         Post approvedPost = this.postRepo.save(post);
         return this.modelMapper.map(approvedPost, PostDto.class);
@@ -197,9 +223,10 @@ public class PostServiceImpl implements PostService {
         }
 
         post.setStatus(Post.PostStatus.REJECTED);
-        notificationService.createNotification(post.getUser().getId(),
-                "Your post titled '" + post.getTitle() + "' has been REJECTED.");
-
+       
+        NotificationDto notificationDto = new NotificationDto();
+    	 notificationDto.setMessage( "Your post titled '" + post.getTitle() + "' has been REJECTED.");
+        notificationService.createNotification(notificationDto, post.getUser().getId(),null);
 
         Post approvedPost = this.postRepo.save(post);
         return this.modelMapper.map(approvedPost, PostDto.class);

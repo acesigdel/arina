@@ -24,6 +24,9 @@ UserDto registerNewUser(UserDto user);
 	UserDto BalanceUpdate(UserDto userDto, Integer userId);
 
 
+	UserDto updateDeviceToken(UserDto userDto, Integer userId);
+
+
 	
 	
 	

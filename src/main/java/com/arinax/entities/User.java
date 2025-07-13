@@ -58,7 +58,7 @@ public class User implements UserDetails {
 	private String fuId;
 
 	private double balance;
-
+	private String deviceToken;
 
 
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

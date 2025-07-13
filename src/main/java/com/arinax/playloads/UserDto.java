@@ -36,6 +36,7 @@ public class UserDto {
 	private double balance;
 	private String otp;
 	
+	private String deviceToken;
 
 	
 	@NotEmpty

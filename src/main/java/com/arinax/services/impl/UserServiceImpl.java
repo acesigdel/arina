@@ -103,10 +103,12 @@ public class UserServiceImpl implements UserService {
        // sendmsg.sendMessage(user.getMobileNo(), welcomeMessage); // Assuming notificationService sends SMS
 
 		
-		 notificationService.createNotification(newUser.getId(), welcomeMessage);
+		 //notificationService.createNotification(newUser.getId(), welcomeMessage);
 		return this.modelMapper.map(newUser, UserDto.class);
 	}
 
+	
+	
 	public String generateUniqueUsername(String email, String mobileNo) {
 	    String emailPrefix = email.split("@")[0]; // e.g., "john.doe"
 	    String mobileSuffix = mobileNo.substring(mobileNo.length() - 4); // e.g., "2334"9816032025
@@ -212,6 +214,18 @@ public class UserServiceImpl implements UserService {
 		return userDto;
 	}
 
+	 @Override
+	   public UserDto updateDeviceToken(UserDto userDto, Integer userId) {
+		    User user = this.userRepo.findById(userId)
+		            .orElseThrow(() -> new ResourceNotFoundException("User", "Id", userId));
+		    user.setDeviceToken(userDto.getDeviceToken());  
+		    // Save the updated user back to the repository
+		    User updatedUser = this.userRepo.save(user);
+		    // Convert the updated User to UserDto and return it
+		    return this.userToDto(updatedUser);
+		}
+
+	
 
 	
 }

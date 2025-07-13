@@ -1,8 +1,7 @@
 package com.arinax.controller;
 
 import java.security.Principal;
-
-
+import java.util.Map;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +26,11 @@ import com.arinax.playloads.JwtAuthResponse;
 import com.arinax.playloads.UserDto;
 import com.arinax.playloads.VerificationDto;
 import com.arinax.repositories.UserRepo;
+import com.arinax.security.GoogleTokenVerifier;
 import com.arinax.security.JwtTokenHelper;
 import com.arinax.services.UserService;
 import com.arinax.services.impl.VerificationService;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 
 import jakarta.validation.Valid;
 
@@ -58,6 +59,35 @@ public class AuthController {
 	    String email = verificationDto.getEmail(); // dto बाट email निकाल्ने
 	    verificationService.getEmail(email);
 	    return "OTP sent to your email";
+	}
+
+	@PostMapping("/google-login")
+	public ResponseEntity<JwtAuthResponse> googleLogin(@RequestBody Map<String, String> request) {
+	    String idToken = request.get("idToken");
+	    GoogleIdToken.Payload payload = GoogleTokenVerifier.verify(idToken);
+
+	    if (payload == null) {
+	        throw new ApiException("Invalid Google token");
+	    }
+
+	    String email = payload.getEmail();
+	    String name = (String) payload.get("name");
+
+	    User user = userRepo.findByEmail(email).orElseGet(() -> {
+	        User newUser = new User();
+	        newUser.setEmail(email);
+	        newUser.setName(name);
+	        newUser.setPassword("231998"); // optional
+	        return userRepo.save(newUser);
+	    });
+
+	    UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+	    String token = jwtTokenHelper.generateToken(userDetails);
+
+	    JwtAuthResponse response = new JwtAuthResponse();
+	    response.setToken(token);
+	    response.setUser(this.mapper.map(user, UserDto.class));
+	    return ResponseEntity.ok(response);
 	}
 
 	 

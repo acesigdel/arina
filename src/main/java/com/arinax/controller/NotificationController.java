@@ -21,14 +21,15 @@ public class NotificationController {
     private NotificationService notificationService;
 	
 	 
-    @PostMapping("/user/{userId}")
-    public ResponseEntity<NotificationDto> createNotification(
-            @PathVariable Integer userId, 
-            @RequestBody NotificationDto notificationDto) {
-        
-        NotificationDto createdNotification = notificationService.createNotification(userId, notificationDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdNotification);
-    }
+	  @PostMapping("/user/{userId}")
+	    public ResponseEntity<NotificationDto> createNotification(
+	            @PathVariable Integer userId, 
+	            @RequestBody NotificationDto notificationDto) {
+	        
+	        NotificationDto createdNotification = notificationService.createNotification(notificationDto,userId,null);
+	       
+	        return ResponseEntity.status(HttpStatus.CREATED).body(createdNotification);
+	    }
   
     
     // Endpoint to get all notifications for a user

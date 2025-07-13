@@ -15,7 +15,7 @@ import com.arinax.entities.User;
 import com.arinax.entities.UserTransaction;
 import com.arinax.exceptions.ApiException;
 import com.arinax.exceptions.ResourceNotFoundException;
-
+import com.arinax.playloads.NotificationDto;
 import com.arinax.playloads.TurnmentApprovalDto;
 import com.arinax.repositories.PostRepo;
 
@@ -102,7 +102,9 @@ public class TurnmentApprovalServiceImpl implements TurnmentApprovalService{
 	    player.setBalance(totalblc - entryfee);
 
 	    // Send notification
-	    notificationService.createNotification(player.getId(), "You are selected for the game");
+	    NotificationDto notificationDto = new NotificationDto();
+    	 notificationDto.setMessage( "You are selected for the game");
+        notificationService.createNotification(notificationDto, player.getId(),null);
 
 	    // Save transaction
 	    UserTransaction txn = new UserTransaction();
