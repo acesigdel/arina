@@ -33,7 +33,7 @@ public class UserDto {
 	private String puId;
 	private String fuId;
 	private String mobileNo;
-	private double balance;
+	private Double balance;
 	private String otp;
 	
 	private String deviceToken;

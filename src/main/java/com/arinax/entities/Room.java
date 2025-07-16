@@ -45,9 +45,9 @@ public class Room {
 //    private LocalDateTime startTime;
 
     @Builder.Default
-    private double entryFee = 0.0;
+    private Double entryFee = 0.0;
 
-    private double wining;
+    private Double wining;
     
     private String gameType; // e.g. "1v1", "2v2", ..., "8v8"
 
@@ -59,7 +59,7 @@ public class Room {
     }
 
     @Builder.Default
-    private int inventory = 0;
+    private Integer inventory = 0;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "game_id", nullable = false)

@@ -41,10 +41,11 @@ public class GameController {
 
 	@PutMapping("/{gaId}")
 	public ResponseEntity<GameDto> updateGame(@Valid @RequestBody GameDto gameDto,
-			@PathVariable Integer catId) {
-		GameDto updatedGame = this.gameService.updateGame(gameDto, catId);
-		return new ResponseEntity<GameDto>(updatedGame, HttpStatus.OK);
+	        @PathVariable("gaId") Integer gaId) {
+	    GameDto updatedGame = this.gameService.updateGame(gameDto, gaId);
+	    return new ResponseEntity<>(updatedGame, HttpStatus.OK);
 	}
+
 
 	// delete
 

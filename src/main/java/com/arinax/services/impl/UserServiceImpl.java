@@ -159,8 +159,13 @@ public class UserServiceImpl implements UserService {
 	    User user = userRepo.findById(userId)
 	            .orElseThrow(() -> new ResourceNotFoundException("User", "Id", userId));
 
+	    if (userDto.getBalance() == null) {
+	        throw new ApiException("Balance cannot be null");
+	    }
+
 	    double incomingBalance = userDto.getBalance();
-	    if (incomingBalance == 0) return userToDto(user);
+	  
+	   
 
 	    user.setBalance(user.getBalance() + incomingBalance);
 	    

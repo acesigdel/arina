@@ -67,9 +67,15 @@
 </dependency>
 
 <dependency>
-  <groupId>com.google.api-client</groupId>
-  <artifactId>google-api-client</artifactId>
-  <version>1.31.5</version>
+    <groupId>com.google.api-client</groupId>
+    <artifactId>google-api-client</artifactId>
+    <version>1.32.1</version> <!-- Available and stable -->
+</dependency>
+
+<dependency>
+    <groupId>com.google.http-client</groupId>
+    <artifactId>google-http-client-jackson2</artifactId>
+    <version>1.43.3</version>
 </dependency>
 
 <dependency>

@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.arinax.entities.GameMode;
 import com.arinax.exceptions.ResourceNotFoundException;
@@ -35,13 +36,15 @@ public class GameModeServiceImpl implements GameModeService{
 	public GameModeDto updateGameMode(GameModeDto gameModeDto, Integer modeId) {
 		GameMode cat = this.gameModeRepo.findById(modeId)
 				.orElseThrow(() -> new ResourceNotFoundException("GameMode ", "Mode Id", modeId));
-		cat.setModeName(gameModeDto.getModeName());
+		if(StringUtils.hasText(gameModeDto.getModeName())) {
+			cat.setModeName(gameModeDto.getModeName());
+		}
+		
 		GameMode updatedmode = this.gameModeRepo.save(cat);
 		return this.modelMapper.map(updatedmode, GameModeDto.class);
 	}
 	
-	
-	
+
 
 	@Override
 	public void deleteGameMode(Integer modeId) {

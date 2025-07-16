@@ -33,6 +33,8 @@ public interface RoomRepo extends JpaRepository<Room, Integer> {
 	
 	@Query("SELECT r FROM Room r WHERE r.status = :status AND r.addedDate >= :cutoffTime")
 	List<Room> findRecentPendingRooms(@Param("status") Room.RoomStatus status, @Param("cutoffTime") LocalDateTime cutoffTime);
+	
+	List<Room> findByStatus(Room.RoomStatus status);
 
 
 }

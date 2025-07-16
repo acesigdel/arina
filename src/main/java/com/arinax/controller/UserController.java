@@ -22,7 +22,8 @@ import com.arinax.playloads.ApiResponse;
 import com.arinax.playloads.UserDto;
 import com.arinax.repositories.UserTransactionRepo;
 import com.arinax.services.UserService;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.validation.Valid;
 
@@ -69,8 +70,9 @@ public class UserController {
 	
 	@PutMapping("{userId}/addbalance")
 	public ResponseEntity<UserDto> BalanceUpdate( @RequestBody UserDto userDto,
-			@PathVariable("userId") Integer uid) {
-		UserDto updatedUser = this.userService.BalanceUpdate(userDto, uid);
+			 @PathVariable Integer userId) {
+
+		UserDto updatedUser = this.userService.BalanceUpdate(userDto, userId);
 		return ResponseEntity.ok(updatedUser);
 	}
 

@@ -14,12 +14,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class RoomDto {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	
 	private Integer roomId;
 	
@@ -29,16 +28,16 @@ public class RoomDto {
 
 	//private String startTime;
 	
-	private double entryFee=0.0;
+	private Double entryFee;
 	
-	private double wining;
+	private Double wining;
 	private String gameType; // e.g. "1v1", "2v2", ..., "8v8"
 
 	private RoomStatus status;
 	 public enum RoomStatus {
 	        PENDING,PLAYER_APPROVED, DISAPPEAR, PRIVATE
 	    }
-	private int inventory=0;
+	private Integer inventory=0;
 	private String creator_SS;
 	private String player_SS;
 	private GameDto game;

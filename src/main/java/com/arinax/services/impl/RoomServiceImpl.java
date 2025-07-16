@@ -3,6 +3,7 @@ package com.arinax.services.impl;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.arinax.entities.Game;
@@ -97,12 +99,14 @@ public class RoomServiceImpl implements RoomService{
         //-----------------------------------------------------
         userTransactionRepo.save(txn); // Save transaction
 	    userRepo.save(user);
-	    return this.modelMapper.map(room, RoomDto.class);
+	    Room savedRoom = roomRepo.save(room);
+	    return this.modelMapper.map(savedRoom, RoomDto.class);
 		
 	}
 
 	//room ko status pending nai rai ranxa , jaba samma creator le kunai user lai accept gardaina 
 	//so player ko req aako xa 20m vitra samma creator le kunai user lai accept garyana vane disappear
+	@Transactional
 	@Scheduled(fixedRate = 120000)
 	public void markExpiredRoomsAsDisappear() {
 	    LocalDateTime cutoff = LocalDateTime.now().minusMinutes(30); // filter recent rooms only
@@ -158,20 +162,13 @@ public class RoomServiceImpl implements RoomService{
 	    Room room = this.roomRepo.findById(roomId)
 	            .orElseThrow(() -> new ResourceNotFoundException("Room", "roomId", roomId));
 
-	    // update attributes from DTO
-	    room.setContent(roomDto.getContent());
-	    room.setEntryFee(roomDto.getEntryFee());
-	    room.setWining(roomDto.getWining());
-	    room.setGameType(roomDto.getGameType());
-	    if (roomDto.getCreator_SS() != null) {
-	        room.setCreator_SS(roomDto.getCreator_SS());
-	    }
-
-	    if (roomDto.getPlayer_SS() != null) {
-	        room.setPlayer_SS(roomDto.getPlayer_SS()); // Fixed line
-	    }
-
-	    room.setInventory(roomDto.getInventory());
+	    Optional.ofNullable(roomDto.getContent()).ifPresent(room::setContent);
+	    Optional.ofNullable(roomDto.getEntryFee()).ifPresent(room::setEntryFee);
+	    Optional.ofNullable(roomDto.getWining()).ifPresent(room::setWining);
+	    Optional.ofNullable(roomDto.getGameType()).ifPresent(room::setGameType);
+	    Optional.ofNullable(roomDto.getCreator_SS()).ifPresent(room::setCreator_SS);
+	    Optional.ofNullable(roomDto.getPlayer_SS()).ifPresent(room::setPlayer_SS);
+	    Optional.ofNullable(roomDto.getInventory()).ifPresent(room::setInventory);
 
 	    Room updatedRoom = this.roomRepo.save(room);
 	    return this.modelMapper.map(updatedRoom, RoomDto.class);
@@ -192,7 +189,26 @@ public class RoomServiceImpl implements RoomService{
 	}
 
 
-	
+	@Override
+	public List<RoomDto> getRoomsByStatus(Room.RoomStatus status) {
+	    List<Room> rooms = roomRepo.findByStatus(status);
+	    return rooms.stream()
+	            .map(room -> modelMapper.map(room, RoomDto.class))
+	            .collect(Collectors.toList());
+	}
+
+//	@Override
+//	public List<RoomDto> getRoomsByGameId(Integer gameId) {
+//	    Game game = gameRepo.findById(gameId)
+//	                .orElseThrow(() -> new ResourceNotFoundException("Game", "gameId", gameId));
+//	    List<Room> rooms = roomRepo.findByGame(game);
+//	    List<RoomDto> roomDtos = rooms.stream()
+//	                                 .map(room -> modelMapper.map(room, RoomDto.class))
+//	                                 .collect(Collectors.toList());
+//	    return roomDtos;
+//	}
+
+
 	
 	@Override
 	public RoomResponse getAllRooms(Integer pageNumber, Integer pageSize, String sortBy, String sortDir) {
@@ -260,6 +276,7 @@ public class RoomServiceImpl implements RoomService{
 	        .map(room -> this.modelMapper.map(room, RoomDto.class))
 	        .collect(Collectors.toList());
 	}
+
 
 	
 

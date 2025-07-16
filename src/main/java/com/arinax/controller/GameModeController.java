@@ -41,10 +41,12 @@ public class GameModeController {
 
 	@PutMapping("/{modeId}")
 	public ResponseEntity<GameModeDto> updateGameMode(@Valid @RequestBody GameModeDto gameModeDto,
-			@PathVariable Integer catId) {
-		GameModeDto updatedGame = this.modeService.updateGameMode(gameModeDto, catId);
+			@PathVariable("modeId") Integer modeId) {
+		GameModeDto updatedGame = this.modeService.updateGameMode(gameModeDto,modeId);
 		return new ResponseEntity<GameModeDto>(updatedGame, HttpStatus.OK);
 	}
+	
+
 
 	// delete
 

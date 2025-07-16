@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.arinax.entities.Room.RoomStatus;
 import com.arinax.exceptions.ApiException;
 import com.arinax.playloads.ApiResponse;
 import com.arinax.playloads.GameDto;
@@ -50,7 +51,14 @@ public class RoomController {
 	@Autowired
 	private FileService fileService;
 	
+	@GetMapping("/status")
+	public ResponseEntity<List<RoomDto>> getRoomsByStatus(@RequestParam RoomStatus status) {
+	    List<RoomDto> rooms = roomService.getRoomsByStatus(status);
+	    return ResponseEntity.ok(rooms);
+	}
 	
+	
+
 	@PostMapping("/file/upload/{roomId}")
 	public ResponseEntity<RoomDto> uploadRoomFile(@RequestParam("file") MultipartFile file,
 	                                                @RequestParam("fileType") String fileType,

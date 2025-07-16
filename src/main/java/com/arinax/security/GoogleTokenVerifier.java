@@ -8,11 +8,12 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
+
 public class GoogleTokenVerifier {
 
 	 private static final String CLIENT_ID = "189934431159-h41lhbv65a9qt69cr26cikhcgsuh5k5o.apps.googleusercontent.com";
+	// private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 	 private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-
 	    public static GoogleIdToken.Payload verify(String idTokenString) {
 	        try {
 	            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(

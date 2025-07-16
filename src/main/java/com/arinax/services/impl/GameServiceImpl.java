@@ -12,6 +12,7 @@ import com.arinax.exceptions.ResourceNotFoundException;
 import com.arinax.playloads.GameDto;
 import com.arinax.repositories.GameRepo;
 import com.arinax.services.GameService;
+import org.springframework.util.StringUtils;
 
 @Service
 public class GameServiceImpl implements GameService {
@@ -31,17 +32,20 @@ public class GameServiceImpl implements GameService {
 
 	@Override
 	public GameDto updateGame(GameDto gameDto, Integer gameId) {
+	    Game game = this.gameRepo.findById(gameId)
+	            .orElseThrow(() -> new ResourceNotFoundException("Game", "Game Id", gameId));
 
-		Game cat = this.gameRepo.findById(gameId)
-				.orElseThrow(() -> new ResourceNotFoundException("Game ", "Game Id", gameId));
+	    if (StringUtils.hasText(gameDto.getGameTitle())) {
+	        game.setGameTitle(gameDto.getGameTitle());
+	    }
+	    if (StringUtils.hasText(gameDto.getGameDescription())) {
+	        game.setGameDescription(gameDto.getGameDescription());
+	    }
 
-		cat.setGameTitle(gameDto.getGameTitle());
-		
-
-		Game updatedcat = this.gameRepo.save(cat);
-
-		return this.modelMapper.map(updatedcat, GameDto.class);
+	    Game updatedGame = this.gameRepo.save(game);
+	    return this.modelMapper.map(updatedGame, GameDto.class);
 	}
+
 
 	
 	//Delete Game
