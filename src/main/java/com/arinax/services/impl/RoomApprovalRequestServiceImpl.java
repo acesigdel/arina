@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.arinax.entities.Room;
 import com.arinax.entities.RoomApprovalRequest;
+import com.arinax.entities.RoomApprovalRequest.ApprovedStatus;
 import com.arinax.entities.User;
 import com.arinax.entities.UserTransaction;
 import com.arinax.exceptions.ApiException;
@@ -72,18 +73,19 @@ public class RoomApprovalRequestServiceImpl implements RoomApprovalRequestServic
 	    return modelMapper.map(saved, RoomApprovalRequestDto.class);
 	}
 
-	@Override
-	  public List<RoomApprovalRequestDto> getAllApprovalsByRoomId(Integer roomId) {
-	        Room room = roomRepo.findById(roomId)
-	                .orElseThrow(() -> new ResourceNotFoundException("Room", "Room ID", roomId));
-
-	        List<RoomApprovalRequest> approvals = roomApprovalRepo.findByRoom(room);
-	        
-	        return approvals.stream()
-	                .map(request -> modelMapper.map(request, RoomApprovalRequestDto.class))
-	                .collect(Collectors.toList());
-	    }
+//	@Override
+//	  public List<RoomApprovalRequestDto> getAllApprovalsByRoomId(Integer roomId) {
+//	        Room room = roomRepo.findById(roomId)
+//	                .orElseThrow(() -> new ResourceNotFoundException("Room", "Room ID", roomId));
+//
+//	        List<RoomApprovalRequest> approvals = roomApprovalRepo.findByRoom(room);
+//	        
+//	        return approvals.stream()
+//	                .map(request -> modelMapper.map(request, RoomApprovalRequestDto.class))
+//	                .collect(Collectors.toList());
+//	    }
 	
+
 	@Override
 	public RoomApprovalRequestDto approveRoomRequest(Integer roomAppId, Integer userId) {
 	    RoomApprovalRequest roomapp = roomApprovalRepo.findById(roomAppId)

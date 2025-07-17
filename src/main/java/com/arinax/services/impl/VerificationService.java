@@ -65,14 +65,7 @@ public class VerificationService {
 		    otpStore.remove(email);
 		}
 
-//	  @Scheduled(fixedRate = 5000) // 5 second मा run हुन्छ
-//	  public void printOtpStore() {
-//	      System.out.println("------- OTP Store Contents -------");
-//	      otpStore.forEach((email, dto) -> {
-//	          System.out.println("Email: " + email + ", OTP: " + dto.getOtp() + ", Time: " + dto.getTimestamp());
-//	      });
-//	      System.out.println("----------------------------------");
-//	  }
+
 
 	  @Scheduled(cron = "0 0 0 * * *") // every day at 12:00 AM
 	  public void removeExpiredOtpsAtMidnight() {
