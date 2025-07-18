@@ -25,6 +25,18 @@ public class RoomApprovalRequestController {
 	 @Autowired
 	    private RoomApprovalRequestService roomApprovalRequestService;
 	
+	 @GetMapping("/room/{roomId}/approvals")
+	    public ResponseEntity<List<RoomApprovalRequestDto>> getAllApprovalsByRoomId(
+	        @PathVariable Integer roomId,
+	        @RequestParam(required = false) ApprovedStatus status
+	    ) {
+		 System.out.println("Room ID: " + roomId);
+		
+
+	        List<RoomApprovalRequestDto> approvals = roomApprovalRequestService.getAllApprovalsByRoomId(roomId, status);
+	        System.out.println("Approvals fetched (no status): " + approvals.size());
+	        return ResponseEntity.ok(approvals);
+	    }
 
 	    @PostMapping("/room/{roomId}/user/{userId}")
 	    public ResponseEntity<RoomApprovalRequestDto> createRoomApproval(
@@ -44,17 +56,7 @@ public class RoomApprovalRequestController {
 //	        List<RoomApprovalRequestDto> approvals = roomApprovalRequestService.getAllApprovalsByRoomId(roomId);
 //	        return new ResponseEntity<>(approvals, HttpStatus.OK);
 //	    }
-	    @GetMapping("/room/{roomId}/approvals")
-	    public ResponseEntity<List<RoomApprovalRequestDto>> getApprovalsByRoomIdAndStatus(
-	            @PathVariable Integer roomId,
-	            @RequestParam(required = false) ApprovedStatus status) {
-
-	        List<RoomApprovalRequestDto> approvals = roomApprovalRequestService
-	            .getApprovalsByRoomIdAndStatus(roomId, status);
-	            
-	        return new ResponseEntity<>(approvals, HttpStatus.OK);
-	    }
-
+	
 
 	    @PostMapping("/approve/{roomAppId}/user/{userId}")
 	    public ResponseEntity<RoomApprovalRequestDto> approveRoomRequest(

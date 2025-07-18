@@ -97,4 +97,27 @@ public class UserController {
 		return ResponseEntity.ok(this.userService.getUserById(userId));
 	}
 
+	
+	 
+	@GetMapping("/email/{email}")
+    public ResponseEntity<UserDto> getUserByEmail(@PathVariable String email) {
+        UserDto user = userService.getUserByEmail(email);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+	
+	//@PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/role/{roleName}")
+    public ResponseEntity<List<UserDto>> getUsersByRole(@PathVariable String roleName) {
+        List<UserDto> users = userService.getUsersByRole(roleName);
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+	//-----------------ROles change----------------
+	// @PreAuthorize("hasRole('ADMIN')")
+	    @PostMapping("/addRole/email/{email}/role/{roleName}")
+	    public ResponseEntity<ApiResponse> addRoleToUser(@PathVariable String email, @PathVariable String roleName) {
+	        userService.addRoleToUser(email, roleName);
+	        ApiResponse response = new ApiResponse("Role added successfully", true);
+	        return ResponseEntity.status(HttpStatus.OK).body(response);
+	    }
+
 }

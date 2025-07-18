@@ -30,8 +30,10 @@ public class PostDto {
 
 	private GameModeDto gameMode;
 	
-	 private PostStatus status;
-	 
+	private Double entryFee;
+	
+	 private String imageName1;
+	 private String imageName2;
 	 
 	
 	//private Set<CommentDto> comments=new HashSet<>();

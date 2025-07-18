@@ -15,8 +15,8 @@ import java.util.function.Function;
 @Component
 public class JwtTokenHelper {
 
-    public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
-
+    //public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+    public static final long JWT_TOKEN_VALIDITY = 30L * 24 * 60 * 60; // 1 month in seconds
     // ✅ Base64 encoded 512-bit key (replace with your own if needed)
     private final String secret = "gY3Kp9UuyVOoIG0M6+Y2nA3d9wKf4DfFmZHGuQRElWJSkZ9e7c3FYxZOfWcfskYXSCbN+vn8CJp51F6bF33aiQ==";
 

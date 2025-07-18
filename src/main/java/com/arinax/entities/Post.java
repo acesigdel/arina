@@ -41,7 +41,8 @@ public class Post {
 	@Column(length = 1000000000)
 	private String content;
 
-	private String imageName;
+	private String imageName1;
+	private String imageName2;
 
 	@Column(name = "created_at", nullable = false)
 	private LocalDateTime addedDate;
@@ -49,13 +50,13 @@ public class Post {
 	@Column(name = "event_start", nullable = true)
 	private LocalDateTime startTime;
 	
-	private double entryFee;
+	private Double entryFee;
 	
 	 @Enumerated(EnumType.STRING)
 	    private PostStatus status;
 	    
 	    public enum PostStatus {
-	        PRIVATE, REJECTED,APPROVED, PENDING
+	        PRIVATE, REJECTED,PLAYER_APPROVED, PENDING
 	    }
 	
 	@ManyToOne
@@ -69,7 +70,9 @@ public class Post {
 	@ManyToOne
 	private User user;
 	
-	
+	//private=no public can see only player can see player entry=closing 
+	//reject=only admin can see after reject
+	//PLAYER_APPROVED=player starting to entry progressing 
 	 
 
 }

@@ -27,6 +27,15 @@ UserDto registerNewUser(UserDto user);
 	UserDto updateDeviceToken(UserDto userDto, Integer userId);
 
 
+	void addRoleToUser(String email, String roleName);
+
+
+	UserDto getUserByEmail(String email);
+
+
+	List<UserDto> getUsersByRole(String roleName);
+
+
 	
 	
 	

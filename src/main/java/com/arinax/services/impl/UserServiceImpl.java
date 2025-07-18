@@ -164,8 +164,6 @@ public class UserServiceImpl implements UserService {
 	    }
 
 	    double incomingBalance = userDto.getBalance();
-	  
-	   
 
 	    user.setBalance(user.getBalance() + incomingBalance);
 	    
@@ -231,6 +229,50 @@ public class UserServiceImpl implements UserService {
 		}
 
 	
+	 @Override
+		public void addRoleToUser(String email, String roleName) {
+
+		    // Fetch user by email
+		    User user = userRepo.findByEmail(email)
+		            .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
+
+		    // Fetch role by name
+		    Role role = roleRepo.findByName(roleName)
+		            .orElseThrow(() -> new ResourceNotFoundException("Role", "name", roleName));
+
+		    // Check if the user already has the role
+		    boolean roleExists = user.getRoles().stream()
+		        .anyMatch(existingRole -> existingRole.getName().equals(roleName));
+
+		    if (roleExists) {
+		        throw new ApiException("Role '" + roleName + "' is already assigned to the user.");
+		    }
+		    // Clear existing roles and assign new role
+		    user.getRoles().add(role);
+		    userRepo.save(user);
+		    System.out.println("User role changed to " + roleName + ".");
+		}
+
+
+
+		
+		@Override
+	    public UserDto getUserByEmail(String email) {
+	        User user = userRepo.findByEmail(email)
+	                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
+	        return modelMapper.map(user, UserDto.class);
+	    }
+
+		@Override
+		public List<UserDto> getUsersByRole(String roleName) {
+			Role role = roleRepo.findByName(roleName)
+	                .orElseThrow(() -> new ResourceNotFoundException("Role", "name", roleName));
+	        return userRepo.findAll().stream()
+	                .filter(user -> user.getRoles().contains(role))
+	                .map(user -> modelMapper.map(user, UserDto.class))
+	                .collect(Collectors.toList());
+	    
+		}
 
 	
 }

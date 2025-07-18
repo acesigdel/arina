@@ -42,7 +42,7 @@ public interface PostService {
 
 		List<PostDto> getPostsByGame(Integer gameId);
 
-		PostDto approvePost(Integer postId);
+		//PostDto approvePost(Integer postId);
 
 		PostDto rejectPost(Integer postId);
 

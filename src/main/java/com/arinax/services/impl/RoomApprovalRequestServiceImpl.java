@@ -128,6 +128,29 @@ public class RoomApprovalRequestServiceImpl implements RoomApprovalRequestServic
 	    return modelMapper.map(updatedRequest, RoomApprovalRequestDto.class);
 	}
 
+	@Override
+	public List<RoomApprovalRequestDto> getAllApprovalsByRoomId(Integer roomId, ApprovedStatus status) {
+	    Room room = roomRepo.findById(roomId)
+	            .orElseThrow(() -> new ResourceNotFoundException("Room", "Room ID", roomId));
+
+	    List<RoomApprovalRequest> approvals;
+	    
+	    if (status != null) {
+	        approvals = roomApprovalRepo.findByRoomAndStatus(room, status);
+	        		
+	    } else {
+	        approvals = roomApprovalRepo.findByRoom(room);
+	    }
+	    
+	    return approvals.stream()
+	            .map(request -> modelMapper.map(request, RoomApprovalRequestDto.class))
+	            .collect(Collectors.toList());
+	}
+
+
+
+
+
 
 
 	
