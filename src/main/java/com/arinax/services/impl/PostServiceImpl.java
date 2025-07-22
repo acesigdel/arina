@@ -310,7 +310,10 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostResponse getPostsByStatus(Post.PostStatus status, Integer pageNumber, Integer pageSize, String sortBy, String sortDir) {
-        Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+       
+    	Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        
+        
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
 
         Page<Post> pagePost = postRepo.findByStatus(status, pageable);

@@ -150,6 +150,8 @@ public class PostController {
 		return new ResponseEntity<List<PostDto>>(result, HttpStatus.OK);
 	}
 
+	
+	//upload image
 	@PostMapping("/file/upload/{postId}/post")
 	public ResponseEntity<PostDto> uploadPostFile(@RequestParam("file") MultipartFile file,
 	                                                @RequestParam("fileType") String fileType,
