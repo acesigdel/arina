@@ -30,10 +30,10 @@ import com.arinax.exceptions.ApiException;
 import com.arinax.playloads.ApiResponse;
 import com.arinax.playloads.FullMapDto;
 import com.arinax.playloads.FullMapResponse;
-import com.arinax.playloads.PostDto;
+
 import com.arinax.services.FileService;
 import com.arinax.services.FullMapService;
-import com.arinax.services.PostService;
+
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -60,7 +60,7 @@ public class FullMapController {
 		return new ResponseEntity<FullMapDto>(createFullMap, HttpStatus.CREATED);
 	}
 	//update
-		@PutMapping("/fullmaps/{updatefullMap}")
+		@PutMapping("/fullmaps/{fullmap_Id}")
 		public ResponseEntity<FullMapDto> updateFullMap(@RequestBody FullMapDto fullMapDto, 
 				
 				@PathVariable Integer fullmap_Id,
@@ -94,7 +94,7 @@ public class FullMapController {
 		public ResponseEntity<FullMapResponse> getAllFullMaps(
 		        @RequestParam(value = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
 		        @RequestParam(value = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
-		        @RequestParam(value = "sortBy", defaultValue = AppConstants.SORT_BY, required = false) String sortBy,
+		        @RequestParam(value = "sortBy", defaultValue = AppConstants.SORT_BY_FullMAP, required = false) String sortBy,
 		        @RequestParam(value = "sortDir", defaultValue = AppConstants.SORT_DIR, required = false) String sortDir) {
 			
 		    FullMapResponse fullMapResponse = this.fullMapService.getAllFullMap(pageNumber, pageSize, sortBy, sortDir);

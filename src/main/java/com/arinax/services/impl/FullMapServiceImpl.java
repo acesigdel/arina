@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
 import com.arinax.config.AppConstants;
 import com.arinax.entities.FullMap;
@@ -36,6 +37,7 @@ import com.arinax.repositories.UserRepo;
 import com.arinax.services.FullMapService;
 import com.arinax.services.NotificationService;
 
+@Service
 public class FullMapServiceImpl implements FullMapService{
 
 	 @Autowired
@@ -199,7 +201,6 @@ public class FullMapServiceImpl implements FullMapService{
 		        
 		        Page<FullMap> pageMap = this.fullMapRepo.findByStatus(FullMap.FullMapStatus.PENDING, p);
 
-		       // Page<Post> pagePost = this.postRepo.findAll(p);
 
 		        List<FullMap> allMaps = pageMap.getContent();
 

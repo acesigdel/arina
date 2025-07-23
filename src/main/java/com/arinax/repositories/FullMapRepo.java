@@ -18,7 +18,7 @@ public interface FullMapRepo extends JpaRepository<FullMap, Integer> {
 	List<FullMap> findByUser(User user);
 	List<FullMap> findByGame(Game game);	
 	
-	@Query("select p from Post p where p.title like :key")
+	@Query("select p from FullMap p where p.title like :key")
 	List<FullMap> searchByTitle(@Param("key") String title);
 	Page<FullMap> findByStatus(FullMap.FullMapStatus status, Pageable pageable);
 
