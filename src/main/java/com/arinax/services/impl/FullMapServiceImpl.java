@@ -118,10 +118,10 @@ public class FullMapServiceImpl implements FullMapService{
 		}
 
 		@Override
-		public FullMapDto updateFullMap(FullMapDto fullMapDto, Integer fullmap_Id, Principal principal) {
+		public FullMapDto updateFullMap(FullMapDto fullMapDto, Integer  fullmapId, Principal principal) {
 
-	        FullMap map = this.fullMapRepo.findById(fullmap_Id)
-	                .orElseThrow(() -> new ResourceNotFoundException("FullMap", "FullMap id", fullmap_Id));
+	        FullMap map = this.fullMapRepo.findById( fullmapId)
+	                .orElseThrow(() -> new ResourceNotFoundException("FullMap", "FullMap id", fullmapId));
 
 	        Role adminRole = roleRepo.findById(AppConstants.ADMIN_USER)
 	                .orElseThrow(() -> new ResourceNotFoundException("Role", "Role Id", AppConstants.ADMIN_USER));
@@ -185,9 +185,9 @@ public class FullMapServiceImpl implements FullMapService{
 		}
 
 		@Override
-		public void deleteFullMap(Integer fullmap_Id) {
-			FullMap map = this.fullMapRepo.findById(fullmap_Id)
-		                .orElseThrow(() -> new ResourceNotFoundException(" FullMap ", "FullMap id", fullmap_Id));
+		public void deleteFullMap(Integer  fullmapId) {
+			FullMap map = this.fullMapRepo.findById( fullmapId)
+		                .orElseThrow(() -> new ResourceNotFoundException(" FullMap ", "FullMap id",  fullmapId));
 
 		        this.fullMapRepo.delete(map);
 
@@ -249,9 +249,9 @@ public class FullMapServiceImpl implements FullMapService{
 
 		
 		@Override
-		public FullMapDto getFullMapById(Integer fullmap_Id) {
-			FullMap fullMap = this.fullMapRepo.findById(fullmap_Id)
-	                .orElseThrow(() -> new ResourceNotFoundException("FullMap", "FullMap id", fullmap_Id));
+		public FullMapDto getFullMapById(Integer  fullmapId) {
+			FullMap fullMap = this.fullMapRepo.findById( fullmapId)
+	                .orElseThrow(() -> new ResourceNotFoundException("FullMap", "FullMap id",  fullmapId));
 	        return this.modelMapper.map(fullMap, FullMapDto.class);
 		}
 
@@ -287,9 +287,9 @@ public class FullMapServiceImpl implements FullMapService{
 		}
 
 		@Override
-		public FullMapDto rejectFullMap(Integer fullmap_Id) {
-			FullMap map = this.fullMapRepo.findById(fullmap_Id)
-	                 .orElseThrow(() -> new ResourceNotFoundException("FullMap", "FullMap id", fullmap_Id));
+		public FullMapDto rejectFullMap(Integer  fullmapId) {
+			FullMap map = this.fullMapRepo.findById( fullmapId)
+	                 .orElseThrow(() -> new ResourceNotFoundException("FullMap", "FullMap id",  fullmapId));
 			
 	        // Only allow approval if status is PENDING
 	        if (map.getStatus() != FullMap.FullMapStatus.PENDING) { //pending hunai paro

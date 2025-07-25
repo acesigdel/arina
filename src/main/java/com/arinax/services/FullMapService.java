@@ -18,11 +18,11 @@ public interface FullMapService {
 
 			//update 
 
-			FullMapDto updateFullMap(FullMapDto fullMapDto, Integer fullmap_Id, Principal principal);
+			FullMapDto updateFullMap(FullMapDto fullMapDto, Integer  fullmapId, Principal principal);
 
 			// delete
 
-			void deleteFullMap(Integer fullmap_Id);
+			void deleteFullMap(Integer  fullmapId);
 			
 			//get all posts
 			
@@ -30,7 +30,7 @@ public interface FullMapService {
 			
 			//get single post
 			
-			FullMapDto getFullMapById(Integer fullmap_Id);
+			FullMapDto getFullMapById(Integer  fullmapId);
 			
 			//get all posts by category
 			
@@ -46,7 +46,7 @@ public interface FullMapService {
 
 			//PostDto approvePost(Integer postId);
 
-			FullMapDto rejectFullMap(Integer fullmap_Id);
+			FullMapDto rejectFullMap(Integer  fullmapId);
 
 			//PostResponse getUnapprovedPosts(Integer pageNumber, Integer pageSize, String sortBy, String sortDir);
 

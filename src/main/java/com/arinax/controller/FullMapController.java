@@ -60,14 +60,14 @@ public class FullMapController {
 		return new ResponseEntity<FullMapDto>(createFullMap, HttpStatus.CREATED);
 	}
 	//update
-		@PutMapping("/fullmaps/{fullmap_Id}")
+		@PutMapping("/fullmaps/{fullmapId}")
 		public ResponseEntity<FullMapDto> updateFullMap(@RequestBody FullMapDto fullMapDto, 
 				
-				@PathVariable Integer fullmap_Id,
+				@PathVariable Integer fullmapId,
 				 Principal principal
 				) {
 
-			FullMapDto updatefullMap = this.fullMapService.updateFullMap(fullMapDto, fullmap_Id,principal);
+			FullMapDto updatefullMap = this.fullMapService.updateFullMap(fullMapDto, fullmapId,principal);
 			return new ResponseEntity<FullMapDto>(updatefullMap, HttpStatus.OK);
 
 		}
@@ -113,9 +113,9 @@ public class FullMapController {
 		    return new ResponseEntity<>(fullMapResponse, HttpStatus.OK);
 		}
 
-		@GetMapping("/fullmaps/{fullMapId}")
-		public ResponseEntity<FullMapDto> getFullMapById(@PathVariable Integer fullMapId) {
-		    FullMapDto fullMapDto = this.fullMapService.getFullMapById(fullMapId);
+		@GetMapping("/fullmaps/{fullmapId}")
+		public ResponseEntity<FullMapDto> getFullMapById(@PathVariable Integer fullmapId) {
+		    FullMapDto fullMapDto = this.fullMapService.getFullMapById(fullmapId);
 		    return new ResponseEntity<>(fullMapDto, HttpStatus.OK);
 		}
 

@@ -9,7 +9,7 @@ import lombok.Data;
 public class FullMapDto {
 
 
-	private Integer fullmap_Id;
+	private Integer  fullmapId;
 
 	
 	private String title;

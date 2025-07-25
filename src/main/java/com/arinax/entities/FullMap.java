@@ -21,7 +21,7 @@ public class FullMap {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	//@Column(name="post_id, nullable=false")
-	private Integer fullmap_Id;
+	private Integer  fullmapId;
 
 	@Column(name = "fullmap_title", length = 100, nullable = false)
 	private String title;
