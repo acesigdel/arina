@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.arinax.entities.User;
 import com.arinax.exceptions.ApiException;
+import com.arinax.playloads.ApiResponse;
 import com.arinax.playloads.JwtAuthRequest;
 import com.arinax.playloads.JwtAuthResponse;
+import com.arinax.playloads.OtpRequestDto;
 import com.arinax.playloads.UserDto;
 import com.arinax.playloads.VerificationDto;
 import com.arinax.repositories.UserRepo;
@@ -31,6 +33,7 @@ import com.arinax.security.JwtTokenHelper;
 import com.arinax.services.UserService;
 import com.arinax.services.impl.VerificationService;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+
 
 import jakarta.validation.Valid;
 
@@ -90,7 +93,12 @@ public class AuthController {
 	    return ResponseEntity.ok(response);
 	}
 
-	 
+	 @PostMapping("/verify")
+	 public ResponseEntity<ApiResponse> verify(@RequestBody OtpRequestDto request) {
+	     ApiResponse response = userService.verifyUser(request.getEmailOrMobile(), request.getOtp());
+	     return ResponseEntity.ok(response);
+	 }
+
 	@PostMapping("/login")
 	public ResponseEntity<JwtAuthResponse> createToken(@RequestBody JwtAuthRequest request) throws Exception {
 		this.authenticate(request.getUsername(), request.getPassword());

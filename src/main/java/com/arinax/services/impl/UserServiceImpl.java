@@ -18,6 +18,7 @@ import com.arinax.entities.User;
 import com.arinax.entities.UserTransaction;
 import com.arinax.exceptions.ApiException;
 import com.arinax.exceptions.ResourceNotFoundException;
+import com.arinax.playloads.ApiResponse;
 import com.arinax.playloads.UserDto;
 import com.arinax.playloads.VerificationDto;
 import com.arinax.repositories.RoleRepo;
@@ -25,7 +26,6 @@ import com.arinax.repositories.UserRepo;
 import com.arinax.repositories.UserTransactionRepo;
 import com.arinax.services.NotificationService;
 import com.arinax.services.UserService;
-
 
 
 @Service
@@ -55,13 +55,38 @@ public class UserServiceImpl implements UserService {
 
 	
 	@Override
+	   public ApiResponse verifyUser(String emailOrMobile, String otp) {
+		    VerificationDto dto = verificationService.getOtpDetails(
+		        emailOrMobile.contains("@") ? "email:" + emailOrMobile : "mobile:" + emailOrMobile
+		    );
+
+		    if (dto == null) {
+		        return new ApiResponse("No OTP found for this user", false);
+		    }
+
+		    if (!dto.getOtp().equals(otp)) {
+		        return new ApiResponse("Invalid OTP", false);
+		    }
+
+		    if (Duration.between(dto.getTimestamp(), Instant.now()).getSeconds() > OTP_VALID_DURATION) {
+		        //verificationService.removeOtp(emailOrMobile);
+		        return new ApiResponse("OTP expired", false);
+		    }
+
+		    // verified => remove OTP
+		    //verificationService.removeOtp(emailOrMobile);
+		    return new ApiResponse("User verified successfully", true);
+		}   
+
+	
+	@Override
 	public UserDto registerNewUser(UserDto userDto) {
 
 		User user = this.modelMapper.map(userDto, User.class);
 
-		if(userDto.getMobileNo()==null) {
-			throw new ApiException("Mobile Number Also Required To SignIn");
-		}
+//		if(userDto.getMobileNo()==null) {
+//			throw new ApiException("Mobile Number Also Required To SignIn");
+//		}
 		// OTP Verify
 	    VerificationDto verification = verificationService.getOtpDetails(userDto.getEmail());
 
@@ -95,8 +120,9 @@ public class UserServiceImpl implements UserService {
 		String generatedUsername = generateUniqueUsername(user.getEmail(), userDto.getMobileNo());
 		
         user.setURemark(generatedUsername);
-        
+        if (userDto.getMobileNo()!=null) {
 		user.setMobileNo(userDto.getMobileNo());
+        }
 		User newUser = this.userRepo.save(user);
 		String welcomeMessage = String.format("Welcome, %s! We're excited to have you on our ArinaX. enjoy the journey ahead! "
         		+ "Thank you for choosing us, Arinax", user.getName());

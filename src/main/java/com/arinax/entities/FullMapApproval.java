@@ -17,7 +17,7 @@ public class FullMapApproval {
 
 	 @Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    private Integer fullmapAppId;
+	    private Integer fullMapAppId;
 	
 	private LocalDateTime requestAt;
 	

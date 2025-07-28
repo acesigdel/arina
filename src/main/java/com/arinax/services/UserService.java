@@ -2,6 +2,7 @@ package com.arinax.services;
 
 import java.util.List;
 
+import com.arinax.playloads.ApiResponse;
 import com.arinax.playloads.UserDto;
 
 
@@ -34,6 +35,9 @@ UserDto registerNewUser(UserDto user);
 
 
 	List<UserDto> getUsersByRole(String roleName);
+
+
+	ApiResponse verifyUser(String emailOrMobile, String otp);
 
 
 	
