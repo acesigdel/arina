@@ -146,6 +146,7 @@ public class RoomController {
 	
 	
 //	create
+			
 	@PostMapping("/user/{userId}/game/{gameId}")
 	public ResponseEntity<RoomDto> createRoom(@RequestBody RoomDto roomDto, @PathVariable Integer userId,
 			@PathVariable Integer gameId) {

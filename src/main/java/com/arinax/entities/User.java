@@ -57,7 +57,7 @@ public class User implements UserDetails {
 	private String puId;
 	private String fuId;
 
-	private Double balance;
+	private Double balance=0.0;
 	private String deviceToken;
 
 

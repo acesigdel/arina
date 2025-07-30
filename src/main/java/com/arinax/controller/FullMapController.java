@@ -105,7 +105,7 @@ public class FullMapController {
 		        @PathVariable("status") String statusStr,
 		        @RequestParam(value = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
 		        @RequestParam(value = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
-		        @RequestParam(value = "sortBy", defaultValue = AppConstants.SORT_BY, required = false) String sortBy,
+		        @RequestParam(value = "sortBy", defaultValue = AppConstants.SORT_BY_FullMAP, required = false) String sortBy,
 		        @RequestParam(value = "sortDir", defaultValue = AppConstants.SORT_DIR, required = false) String sortDir) {
 
 		    FullMap.FullMapStatus status = FullMap.FullMapStatus.valueOf(statusStr.toUpperCase());

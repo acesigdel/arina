@@ -74,7 +74,8 @@ public class RoomServiceImpl implements RoomService{
 	    room.setAddedDate(LocalDateTime.now());
 	    room.setGame(game);
 	    
-	    double blc=user.getBalance();
+	    Double blc=user.getBalance();
+	   
 	    if(blc<roomDto.getEntryFee()) {
 	    	throw new ApiException("Insufficient Balance");
 	    }
